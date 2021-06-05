@@ -5,16 +5,11 @@ public class LastFrame extends Frame{
     private int firstRoll;
     private int secondRoll;
     private int thirdRoll;
+    private boolean isStrike;
+    private boolean isSpare;
 
     public LastFrame() {
         super();
-    }
-
-    public LastFrame(int firstRoll, int secondRoll, int thirdRoll) {
-        super(firstRoll, secondRoll);
-        this.firstRoll = firstRoll;
-        this.secondRoll = secondRoll;
-        this.thirdRoll = thirdRoll;
     }
 
     @Override
@@ -41,5 +36,25 @@ public class LastFrame extends Frame{
 
     public void setThirdRoll(int thirdRoll) {
         this.thirdRoll = thirdRoll;
+    }
+
+    @Override
+    public boolean isStrike() {
+        return isStrike;
+    }
+
+    @Override
+    public void setStrike(boolean strike) {
+        isStrike = strike;
+    }
+
+    @Override
+    public boolean isSpare() {
+        return isSpare;
+    }
+
+    @Override
+    public void setSpare(boolean spare) {
+        isSpare = spare;
     }
 }

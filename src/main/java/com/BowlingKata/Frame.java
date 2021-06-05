@@ -4,13 +4,26 @@ public class Frame {
 
     private int firstRoll;
     private int secondRoll;
+    private boolean isStrike = false;
+    private boolean isSpare = false;
 
-    public Frame() {
+    public boolean isStrike() {
+        return isStrike;
     }
 
-    public Frame(int firstRoll, int secondRoll) {
-        this.firstRoll = firstRoll;
-        this.secondRoll = secondRoll;
+    public void setStrike(boolean strike) {
+        isStrike = strike;
+    }
+
+    public boolean isSpare() {
+        return isSpare;
+    }
+
+    public void setSpare(boolean spare) {
+        isSpare = spare;
+    }
+
+    public Frame() {
     }
 
     public void setFirstRoll(int firstRoll) {

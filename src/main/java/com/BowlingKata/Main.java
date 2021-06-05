@@ -13,17 +13,18 @@ public class Main {
         if(str.charAt(0) == 'X') {
             frame.setFirstRoll(10);
             frame.setSecondRoll(0);
+            frame.setStrike(true);
             return frame;
         }
         if(str.charAt(1) == '/') {
+            frame.setSpare(true);
             if(str.charAt(0) == '-') {
                 frame.setFirstRoll(0);
             } else {
                 char ch = str.charAt(0);
                 frame.setFirstRoll(Integer.parseInt(Character.toString(ch)));
             }
-            frame.setSecondRoll(10);
-//            //- frame.getFirstRoll()
+            frame.setSecondRoll(10 - frame.getFirstRoll());
             return frame;
         }
         char chOne = str.charAt(0);
@@ -49,7 +50,6 @@ public class Main {
     public static LastFrame getLastFrame(String str) {
 
         LastFrame lastFrame = new LastFrame();
-        Pattern digitPattern = Pattern.compile("\\d");
 
         if(str.charAt(0) == 'X') {
             lastFrame.setFirstRoll(10);
@@ -90,8 +90,7 @@ public class Main {
             } else {
                 if(str.charAt(2) == '/') {
                     //Roll1: X Roll2: [1-9] Roll3: /
-                    char ch = str.charAt(1);
-                    lastFrame.setSecondRoll(Integer.parseInt(Character.toString(ch)));
+                    lastFrame.setSecondRoll(0);
                     lastFrame.setThirdRoll(10);
                 }
                 else if(str.charAt(2) == '-') {
@@ -139,12 +138,12 @@ public class Main {
             if(str.charAt(1) == '/') {
                 if(str.charAt(2) == 'X'){
                     //Roll1: [1-9] Roll2: / Roll3: X
-                    lastFrame.setSecondRoll(10);
+                    lastFrame.setSecondRoll(10 - lastFrame.getFirstRoll());
                     lastFrame.setThirdRoll(10);
                 }
                 else if(str.charAt(2) == '-') {
                     //Roll1: [1-9] Roll2: / Roll3: -
-                    lastFrame.setSecondRoll(10);
+                    lastFrame.setSecondRoll(10  - lastFrame.getFirstRoll());
                     lastFrame.setThirdRoll(0);
                 }
                 else {
@@ -165,13 +164,11 @@ public class Main {
 
         LinkedList<Frame> scoreList = new LinkedList<>();
 
-        int i =0;
         for (String s : strArray) {
             if (scoreList.size() < 9) {
                 Frame frame = getFrame(s);
                 scoreList.add(frame);
             }
-            i++;
         }
         return scoreList;
     }
@@ -186,6 +183,25 @@ public class Main {
         return allStrikes;
     }
 
+    private static int getStrikeScore(LinkedList<Frame> framesList, int index) {
+        int score = 0;
+        Frame nextFrame = framesList.get(index + 1);
+        if (nextFrame.isStrike()) {
+            Frame theSecondFrame = framesList.get(index + 2);
+            score += 10 + nextFrame.getFirstRoll() + theSecondFrame.getFirstRoll();
+        } else if(nextFrame.isSpare()) {
+            score += 20;
+        } else {
+            score = 10 + nextFrame.getFirstRoll() + nextFrame.getSecondRoll();
+        }
+        return score;
+    }
+
+    private static int getSpareScore(LinkedList<Frame> framesList, int index) {
+        Frame nextFrame = framesList.get(index + 1);
+        return (10 + nextFrame.getFirstRoll());
+    }
+
     public static int getFinalScore(String inputString) {
 
         //validate input string before parsing
@@ -196,26 +212,18 @@ public class Main {
         if(areAllStrikes(strArray)){
             finalScore = 300;
         } else {
-
             LinkedList<Frame> framesList = parseInputString(strArray);
-
             LastFrame lastFrame = getLastFrame(strArray[9]);
             framesList.add(lastFrame);
+            int frameScore;
 
-            int frameScore = 0;
             for(int i=0; i < 9; i++) {
-                if(framesList.get(i).getFirstRoll() == 10) {
-                    //This is a strike
-                    frameScore = 10;
-                    Frame nextFrame = framesList.get(i+1);
-                    frameScore += nextFrame.getFirstRoll() + nextFrame.getSecondRoll();
+                if(framesList.get(i).isStrike()) {
+                    frameScore = getStrikeScore(framesList, i);
                     finalScore += frameScore;
                 }
-                else if (framesList.get(i).getSecondRoll() == 10) {
-                    //This is a spare
-                    frameScore = 10;
-                    Frame nextFrame = framesList.get(i+1);
-                    frameScore += nextFrame.getFirstRoll();
+                else if (framesList.get(i).isSpare()) {
+                    frameScore = getSpareScore(framesList, i);
                     finalScore += frameScore;
                 }
                 else {
