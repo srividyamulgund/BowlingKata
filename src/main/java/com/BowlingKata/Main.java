@@ -5,6 +5,25 @@ import java.util.regex.Pattern;
 
 public class Main {
 
+    private static int getStrikeScore(LinkedList<Frame> framesList, int index) {
+        int score = 0;
+        Frame nextFrame = framesList.get(index + 1);
+        if (nextFrame.isStrike()) {
+            Frame theSecondFrame = framesList.get(index + 2);
+            score += 10 + nextFrame.getFirstRoll() + theSecondFrame.getFirstRoll();
+        } else if(nextFrame.isSpare()) {
+            score += 20;
+        } else {
+            score = 10 + nextFrame.getFirstRoll() + nextFrame.getSecondRoll();
+        }
+        return score;
+    }
+
+    private static int getSpareScore(LinkedList<Frame> framesList, int index) {
+        Frame nextFrame = framesList.get(index + 1);
+        return (10 + nextFrame.getFirstRoll());
+    }
+
     public static Frame getFrame(String str) {
 
         Frame frame = new Frame();
@@ -181,25 +200,6 @@ public class Main {
             allStrikes = s.equals("X");
         }
         return allStrikes;
-    }
-
-    private static int getStrikeScore(LinkedList<Frame> framesList, int index) {
-        int score = 0;
-        Frame nextFrame = framesList.get(index + 1);
-        if (nextFrame.isStrike()) {
-            Frame theSecondFrame = framesList.get(index + 2);
-            score += 10 + nextFrame.getFirstRoll() + theSecondFrame.getFirstRoll();
-        } else if(nextFrame.isSpare()) {
-            score += 20;
-        } else {
-            score = 10 + nextFrame.getFirstRoll() + nextFrame.getSecondRoll();
-        }
-        return score;
-    }
-
-    private static int getSpareScore(LinkedList<Frame> framesList, int index) {
-        Frame nextFrame = framesList.get(index + 1);
-        return (10 + nextFrame.getFirstRoll());
     }
 
     public static int getFinalScore(String inputString) {
