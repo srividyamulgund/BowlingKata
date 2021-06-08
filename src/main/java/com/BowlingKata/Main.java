@@ -24,43 +24,62 @@ public class Main {
         return (10 + nextFrame.getFirstRoll());
     }
 
+    private static Frame setFrame(int firstRoll, int secondRoll, boolean isStrike, boolean isSpare) {
+        Frame frame = new Frame();
+
+        frame.setFirstRoll(firstRoll);
+        frame.setSecondRoll(secondRoll);
+        frame.setStrike(isStrike);
+        frame.setSpare(isSpare);
+
+        return frame;
+    }
+
+    private static int strToInteger(char ch) {
+
+        return Integer.parseInt(Character.toString(ch));
+    }
+
     public static Frame getFrame(String str) {
 
         Frame frame = new Frame();
-        Pattern digitPattern = Pattern.compile("\\d");
+        int firstRoll, secondRoll;
+        boolean strike = false, spare;
 
         if(str.charAt(0) == 'X') {
-            frame.setFirstRoll(10);
-            frame.setSecondRoll(0);
-            frame.setStrike(true);
+            frame = setFrame(10, 0, true, false);
             return frame;
         }
         if(str.charAt(1) == '/') {
-            frame.setSpare(true);
+            spare = true;
             if(str.charAt(0) == '-') {
-                frame.setFirstRoll(0);
+                firstRoll = 0;
             } else {
                 char ch = str.charAt(0);
-                frame.setFirstRoll(Integer.parseInt(Character.toString(ch)));
+                firstRoll = strToInteger(ch);
             }
-            frame.setSecondRoll(10 - frame.getFirstRoll());
+            secondRoll = 10-firstRoll;
+            frame = setFrame(firstRoll, secondRoll, strike, spare);
             return frame;
         }
         char chOne = str.charAt(0);
         char chTwo = str.charAt(1);
-        if(chOne == '-' && digitPattern.matcher(Character.toString(chTwo)).matches()) {
-            frame.setFirstRoll(0);
-            frame.setSecondRoll(Integer.parseInt(Character.toString(chTwo)));
+        if(chOne == '-' && Character.isDigit(chTwo)) {
+            firstRoll = 0;
+            secondRoll = strToInteger(chTwo);
+            frame = setFrame(firstRoll, secondRoll, false, false);
             return frame;
         }
-        if(chTwo == '-' && digitPattern.matcher(Character.toString(chOne)).matches()) {
-            frame.setFirstRoll(Integer.parseInt(Character.toString(chOne)));
-            frame.setSecondRoll(0);
+        if(chTwo == '-' && Character.isDigit(chOne)) {
+            firstRoll = strToInteger(chOne);
+            secondRoll = 0;
+            frame = setFrame(firstRoll, secondRoll, false, false);
             return frame;
         }
         if(Character.isDigit(chOne) && Character.isDigit(chTwo)) {
-            frame.setFirstRoll(Integer.parseInt(Character.toString(chOne)));
-            frame.setSecondRoll(Integer.parseInt(Character.toString(chTwo)));
+            firstRoll = strToInteger(chOne);
+            secondRoll = strToInteger(chTwo);
+            frame = setFrame(firstRoll, secondRoll, false, false);
             return frame;
         }
         return frame;
