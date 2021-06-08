@@ -1,7 +1,6 @@
 package com.BowlingKata;
 
 import java.util.LinkedList;
-import java.util.regex.Pattern;
 
 public class Main {
 
@@ -44,14 +43,12 @@ public class Main {
 
         Frame frame = new Frame();
         int firstRoll, secondRoll;
-        boolean strike = false, spare;
 
         if(str.charAt(0) == 'X') {
             frame = setFrame(10, 0, true, false);
             return frame;
         }
         if(str.charAt(1) == '/') {
-            spare = true;
             if(str.charAt(0) == '-') {
                 firstRoll = 0;
             } else {
@@ -59,7 +56,7 @@ public class Main {
                 firstRoll = strToInteger(ch);
             }
             secondRoll = 10-firstRoll;
-            frame = setFrame(firstRoll, secondRoll, strike, spare);
+            frame = setFrame(firstRoll, secondRoll, false, true);
             return frame;
         }
         char chOne = str.charAt(0);
